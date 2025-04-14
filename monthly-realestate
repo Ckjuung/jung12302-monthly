@@ -1,0 +1,5 @@
+monthly-realestate/
+├── main.py
+└── .github/
+    └── workflows/
+        └── monthly.yml
