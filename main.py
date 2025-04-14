@@ -3,12 +3,12 @@ import requests, xmltodict, pandas as pd
 import datetime
 from dateutil.relativedelta import relativedelta
 
-today = datetime.date.today().replace(day=1)
+today = datetime.date(2025, 4, 1)
 start_date = today - relativedelta(months=1)
 end_date = today - datetime.timedelta(days=1)
 target_month = start_date.strftime("%Y%m")
 
-service_key = "YOUR_ENCODED_SERVICE_KEY"
+service_key = "DBL9%2FjevAhTCfpDi5RqbnF61jt1lxJGlxxUSW%2F7mv4GB9bDJk6F1V%2B2izfb51UFSFtAGXxQ89Xy89pk4VFOMuQ%3D%3D"
 gu_list = {
     "강남구": "11680", "서초구": "11650", "송파구": "11710", "성동구": "11200",
     "동작구": "11590", "광진구": "11215", "동대문구": "11230", "마포구": "11440", "강동구": "11740"
