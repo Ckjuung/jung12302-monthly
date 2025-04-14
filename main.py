@@ -46,7 +46,7 @@ def classify_group(area):
 df['면적그룹'] = df['excluUseAr'].apply(classify_group)
 df = df[df['면적그룹'].notnull()]
 
-lines = [f"# 📊 {start_date.strftime('%Y년 %m월')} 실거래가 보고서 (전용면적 그룹별 Top3)
+lines = [f"# 📊 {start_date.strftime('%Y년 %m월')} 실거래가 보고서 (전용면적 그룹별 Top3)\n"]
 "]
 for idx, gu in enumerate(gu_list, start=1):
     lines.append(f"## {idx}. {gu}")
