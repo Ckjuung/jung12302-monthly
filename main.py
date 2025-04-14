@@ -46,17 +46,21 @@ def classify_group(area):
 df['면적그룹'] = df['excluUseAr'].apply(classify_group)
 df = df[df['면적그룹'].notnull()]
 
-lines = [f"# 📊 {start_date.strftime('%Y년 %m월')} 실거래가 보고서 (전용면적 그룹별 Top3)
-"]
+lines = []
+lines.append(f"# 📊 {start_date.strftime('%Y년 %m월')} 실거래가 보고서 (전용면적 그룹별 Top3)
+")
+
 for idx, gu in enumerate(gu_list, start=1):
     lines.append(f"## {idx}. {gu}")
     df_gu = df[df['sggNm'] == gu]
     for group in ['그룹1 (50~60㎡)', '그룹2 (80~85㎡)']:
         df_grp = df_gu[df_gu['면적그룹'] == group]
         if df_grp.empty:
-            lines.append(f"- **{group}**: 거래 없음\n")
+            lines.append(f"- **{group}**: 거래 없음
+")
             continue
-        lines.append(f"\n- **{group}**")
+        lines.append(f"
+- **{group}**")
         top3 = (
             df_grp.groupby('aptNm')
             .agg(거래건수=('거래일', 'count'))
