@@ -3,7 +3,7 @@ import requests, xmltodict, pandas as pd
 import datetime
 from dateutil.relativedelta import relativedelta
 
-today = datetime.date.today().replace(day=1)
+today = datetime.date(2025, 4, 1)
 start_date = today - relativedelta(months=1)
 end_date = today - datetime.timedelta(days=1)
 target_month = start_date.strftime("%Y%m")
