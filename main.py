@@ -8,7 +8,7 @@ start_date = today - relativedelta(months=1)
 end_date = today - datetime.timedelta(days=1)
 target_month = start_date.strftime("%Y%m")
 
-service_key = "YOUR_ENCODED_SERVICE_KEY"  # 👉 여기에 국토부 API 키를 삽입하세요
+service_key = "YOUR_ENCODED_SERVICE_KEY"
 gu_list = {
     "강남구": "11680", "서초구": "11650", "송파구": "11710", "성동구": "11200",
     "동작구": "11590", "광진구": "11215", "동대문구": "11230", "마포구": "11440", "강동구": "11740"
@@ -22,15 +22,27 @@ for gu, code in gu_list.items():
         r = requests.get(url)
         parsed = xmltodict.parse(r.content)
         items = parsed.get("response", {}).get("body", {}).get("items", {}).get("item", [])
-        if isinstance(items, dict): items = [items]
-        for item in items:
-            item['sggNm'] = gu
-            all_data.append(item)
-    except:
+        if items:
+            if isinstance(items, dict): items = [items]
+            for item in items:
+                item['sggNm'] = gu
+                all_data.append(item)
+    except Exception as e:
+        print(f"❗ {gu} 요청 실패: {e}")
         continue
 
+# ✅ 응답 비었을 경우 중단
+if not all_data:
+    raise ValueError("🚫 API로부터 수신된 거래 데이터가 없습니다. 분석을 중단합니다.")
+
 df = pd.DataFrame(all_data)
-for col in ['dealYear', 'dealMonth', 'dealDay', 'excluUseAr', 'dealAmount', 'dealingGbn']:
+
+# ✅ 'sggNm' 컬럼이 없는 경우 중단
+if 'sggNm' not in df.columns:
+    raise ValueError("🚨 'sggNm' 컬럼이 포함된 데이터가 없습니다. API 응답이 비어 있거나 잘못됨.")
+
+# 전처리
+for col in ['dealYear', 'dealMonth', 'dealDay', 'excluUseAr', 'dealAmount', 'dealingGbn', 'sggNm']:
     if col not in df.columns: df[col] = None
 df['거래일'] = pd.to_datetime(df['dealYear'] + df['dealMonth'].str.zfill(2) + df['dealDay'].str.zfill(2), errors='coerce')
 df = df[(df['거래일'] >= pd.Timestamp(start_date)) & (df['거래일'] <= pd.Timestamp(end_date))]
